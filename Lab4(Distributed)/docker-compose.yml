@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile-Backend
+    environment:
+      DB_URL: "jdbc:mysql://mysql:3306/lab"
+      DB_USER: root
+      DB_PASSWORD: 1234567890
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - sobolv
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234567890
+      MYSQL_DATABASE: lab
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test123
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - sobolv
+volumes:
+  db-data:
+networks:
+  sobolv:
